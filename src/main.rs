@@ -1,10 +1,12 @@
 #![allow(unused)]
 
+use core::num;
 use std::io;
 use rand::Rng;
 use std::io::{Write,BufReader,BufRead,ErrorKind};
 use std::fs::File;
 use std::cmp::Ordering;
+use std::ops::Add; // allows to add generics
 
 fn input_output(){
     println!("What is your name?");
@@ -185,6 +187,92 @@ fn strings(){
 
 }
 
+fn casting(){
+    let int1_u8:u8 = 5;
+    let int2_u8:u8 = 4;
+    let int3_u32:u32 = (int1_u8 as u32) + (int2_u8 as u32);
+    println!("casting {}",int3_u32)
+}
+
+fn enums(){
+    enum Day{
+        Sunday,Monday,Tuesday,Wednusday,Thursday,Friday,Saturday
+    }
+
+    impl Day {
+        fn is_weekend(&self)->bool{
+            match self{
+                Day::Saturday | Day::Sunday => true,
+                _ => false
+            }
+        }
+    }
+    let today:Day = Day::Sunday;
+    match today{
+        Day::Sunday => println!("Its Sunday"),
+        Day::Monday => println!("Its Monday"),
+        Day::Tuesday => println!("Its Tuesday"),
+        Day::Wednusday => println!("Its Wednusday"),
+        Day::Thursday => println!("Its Thursday"),
+        Day::Friday => println!("Its Friday"),
+        Day::Saturday => println!("Its Saturday"),
+    }
+    println!("Its today the weekend {}",today.is_weekend());
+}
+
+fn vectors_func(){
+    // vectors are arrays if they are mutable and can only store value of same type
+    let vec1:Vec<i32> = Vec::new();
+    let mut vec2:Vec<i32> = vec![1,2,3,4];
+    vec2.push(5);
+    println!("1st value :{}",vec2[0]);
+
+    let second:&i32 = &vec2[1];
+    match vec2.get(1) {
+        Some(second) => println!("2nd : {}",second),
+        None => println!("No 2nd value"),
+    }
+
+    for i in &mut vec2{
+        *i *=2;
+    }
+    for i in &vec2{
+        println!("{}",i)
+    }
+
+    println!("Vec length {}",vec2.len());
+    println!("pop : {:?}",vec2.pop());
+}
+
+fn functions(){
+    fn get_sum(x:i32,y:i32)->i32{
+        x + y // it returns
+    }
+    println!("{}",get_sum(4, 5));
+
+    fn get_2(x:i32,y:i32)->(i32,i32){
+        return (x+y,x-y);
+    }
+    let (val1,val2) = get_2(6,4);
+    println!("{} ,{}",val1,val2);
+
+    fn sum_list(list: &[i32])->i32{
+        let mut sum = 0;
+        for &val in list.iter(){
+            sum += &val;
+        }
+        sum // return
+    }
+
+    let num_list = vec![1,2,3,4];
+    println!("sum of list = {}",sum_list(&num_list));
+}
+
+fn sum_generics<T:Add<Output = T>>(x:T,y:T)->T{
+    return x+y;
+}
+
+
 fn main() {
     // input_output();
     // data_types();
@@ -197,6 +285,11 @@ fn main() {
     // arrays_loop();
     // tuples();
     // strings();
+    // casting();
+    // enums();
+    // vectors_func();
+    // functions();
+    // println!("5 + 4 = {}",sum_generics(5.4,4.8));
 
-    todo_casting();
+    ownerships();
 }   
