@@ -7,6 +7,7 @@ use std::io::{Write,BufReader,BufRead,ErrorKind};
 use std::fs::File;
 use std::cmp::Ordering;
 use std::ops::Add; // allows to add generics
+use std::collections::HashMap;
 
 fn input_output(){
     println!("What is your name?");
@@ -272,24 +273,119 @@ fn sum_generics<T:Add<Output = T>>(x:T,y:T)->T{
     return x+y;
 }
 
+fn ownerships(){
+    // Stack : Stores values in a last in first out format
+    // Heap  : When putting data in heap, we request a certain amount of space. Os finds space available and returns an address for that space called a pointer.
+    // RULES
+        // 1. Each values has a variable that's called its owner.
+        // 2. There is only one owner at a time
+        // 3. When the owner goes out of scope the value disappears.
+
+    let str1 = String::from("world");
+    // let str2 = str1; // str1 no longer exist.
+    // println!("Hello {}",str1)
+    let mut str3 = str1.clone();
+    println!("Hello {}",str1);
+    change_string(&mut str3)
+}
+
+fn change_string(name:&mut String){
+    name.push_str(" is happy");
+    println!("Message : {}",name)
+}
+
+fn hashmaps_dict(){
+    let mut heros = HashMap::new();
+    heros.insert("Superman", "Clark Kent");
+    heros.insert("Batman", "Bruce Wayne");
+
+    for (k,v) in heros.iter(){
+        println!("key : {} - value : {}",k,v);
+    }
+
+    println!("length : {}",heros.len());
+
+    // Containe or Includes
+    if heros.contains_key(&"Superman"){
+        let the_superman = heros.get(&"Superman");
+        match the_superman{
+            Some(x)=>println!("Superman is hero"),
+            None => println!("Superman is not hero")
+        }
+    }
+}
+
+fn structs(){
+    struct Customer{
+        name:String,
+        address:String,
+        balance:f32,
+    }
+    let mut bob = Customer{
+        name:String::from("Bob Smith"),
+        address:String::from("Main st"),
+        balance:34.34
+    };
+    bob.address = String::from("505 Main St");
+    println!("bob name {}, address: {}, balance: {}",bob.name,bob.address,bob.balance)
+}
+
+fn traits(){
+    const PI:f32 = 3.1415;
+    trait Shape {
+        fn new(legth:f32,width:f32)->Self; // constructor
+        fn area(&self)->f32;
+    }
+    struct Rectangle{length:f32,width:f32};
+    struct Circle {length:f32,width:f32};
+
+    impl Shape for Rectangle{
+        fn new(length:f32,width:f32)->Rectangle{
+            return Rectangle { length, width }
+        }
+        fn area(&self)->f32{
+            return self.length * self.width;
+        }
+    }
+    impl Shape for Circle{
+        fn new(length:f32,width:f32)->Circle{
+            return Circle { length, width }
+        }
+        fn area(&self)->f32{
+            return (self.length/2.0).powf(2.0)*PI;
+        }
+    }
+
+    let rec:Rectangle = Shape::new(10.0,10.0);
+    let cir:Circle = Shape::new(10.0,10.0);
+
+    println!("Rec Area : {}",rec.area());
+    println!("Cir Area : {}",cir.area());
+}
+
+
 
 fn main() {
-    // input_output();
-    // data_types();
-    // data_types_max();
-    // boolean();
-    // numbers();
-    // if_condition();
-    // ternary_operator();
-    // match_or_swtich();
-    // arrays_loop();
-    // tuples();
-    // strings();
-    // casting();
-    // enums();
-    // vectors_func();
-    // functions();
-    // println!("5 + 4 = {}",sum_generics(5.4,4.8));
 
-    ownerships();
+    modules();
+    // traits();
+    // structs();
+    // hashmaps_dict();
+    // ownerships();
+    // println!("5 + 4 = {}",sum_generics(5.4,4.8));
+    // functions();
+    // vectors_func();
+    // enums();
+    // casting();
+    // strings();
+    // tuples();
+    // arrays_loop();
+    // match_or_swtich();
+    // ternary_operator();
+    // if_condition();
+    // numbers();
+    // boolean();
+    // data_types_max();
+    // data_types();
+    // input_output();
 }   
