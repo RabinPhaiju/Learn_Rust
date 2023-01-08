@@ -9,6 +9,9 @@ use std::cmp::Ordering;
 use std::ops::Add; // allows to add generics
 use std::collections::HashMap;
 
+mod restaurant;
+use crate::restaurant::order_food;
+
 fn input_output(){
     println!("What is your name?");
     let mut name = String::new();
@@ -364,10 +367,40 @@ fn traits(){
 }
 
 
+fn addeven1(bottom:i32,top:i32)->i32{
+    if(top>bottom){
+        let mut sum:i32 = 0;
+        let mut number:i32 = bottom;
+        loop {
+            if number>top{
+                break;
+            }
+            if number%2 == 0{
+                sum +=number;
+            }
+            number+=1;
+        }
+        sum
+    }else{
+        0
+    }
+}
+
+fn addeven2(bottom:i32,top:i32)->i32{
+    (bottom..=top)
+        .filter(|e| e%2 == 0)
+        .sum()
+}
+
 
 fn main() {
 
-    modules();
+    error_handling();
+    order_food();
+    
+    // println!("sum is {}",addeven1(2,12));
+    // println!("sum is {}",addeven2(2,12));
+
     // traits();
     // structs();
     // hashmaps_dict();
