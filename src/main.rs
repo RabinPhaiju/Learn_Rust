@@ -392,12 +392,135 @@ fn addeven2(bottom:i32,top:i32)->i32{
         .sum()
 }
 
+fn error_handling(){
+    // panic!("Terrible Error");
+
+    let lil_arr = [1,2];
+    // println!("{}",lil_arr[10])
+
+    let path = "lines.txt";
+    // Creating and write to a file
+    // let output  = File::create(path);
+    // let mut output = match output {
+    //     Ok(file)=>file,
+    //     Err(error) => {
+    //         panic!("Problem creating file: {:?}",error)
+    //     }
+    // };
+    // write!(output,"Just some\nRandom words").expect
+    // ("Failed to write to file.");
+
+    // Read from file
+    let input = File::open(path).unwrap();
+    let buffered = BufReader::new(input);
+    for line in buffered.lines(){
+        println!("{}",line.unwrap());
+    }
+
+    // error kind
+    let output2 = File::create("random.txt");
+    let output2 = match output2{
+        Ok(file) => file,
+        Err(error)=>match error.kind(){
+            ErrorKind::NotFound => match File::create("random.txt"){
+                Ok(fc)=>fc,
+                Err(e)=>panic!("Can't create file {:?}",e)
+            },
+            _other_error => panic!("Problem opening a file : {:?}",error),
+        },
+    };
+}
+
+
+fn iterators(){
+    let mut arr_it = [1,2,3,4];
+    for val in arr_it.iter(){ 
+        // it borrow the values not remove
+        // cannot mutate
+        println!("{}",val);
+    }
+
+    // create iterator
+    let mut iter1 = arr_it.iter();
+    println!("1st : {:?}",iter1.next());
+}
+
+fn closures(){
+    // let var_name = |parameters| -> return_type {BODY}
+    let can_vote = |age:i32|->bool{
+        age>= 18
+    };
+    println!("Can vote :{}",can_vote(8));
+
+    let mut sam1 = 5;
+    let print_var = || println!("sam1 = {}",sam1);
+    print_var();
+
+    sam1 = 10;
+    let mut change_var = || sam1 +=1; // mut closure change mut val.
+    change_var();
+    println!("sam1 = {}",sam1);
+    sam1 = 20;
+    println!("sam1 = {}",sam1);
+
+    // pass closures to function
+    fn use_func<T>(a:i32,b:i32,func:T)->i32 where T: Fn(i32,i32)->i32{
+        func(a,b)
+    } // generics
+    let sum = |a,b| a+b;
+    let mul = |a,b| a*b;
+
+    println!(" 5 + 4 = {}",use_func(5,4,sum));
+    println!(" 5 * 4 = {}",use_func(5,4,mul));
+}
+
+fn smart_pointer(){
+    // provides functionality beyond referencing a specific location in memeory.
+
+}
+
+fn box_s(){
+    // stores data in heap instead of stack.
+    let b_int1 = Box::new(10);
+    println!("b_int1 = {}",b_int1);
+
+    struct TreeNode<T> {
+        pub left: Option<Box<TreeNode<T>>>,
+        pub right: Option<Box<TreeNode<T>>>,
+        pub key : T,
+    }
+    impl <T> TreeNode<T> {
+        pub fn new(key: T)-> Self {
+            TreeNode { left: None, right: None, key, }
+        }
+        pub fn left(mut self, node: TreeNode<T>)-> Self{
+            self.left = Some(Box::new(node));
+            self
+        }
+        pub fn right(mut self, node: TreeNode<T>)-> Self{
+            self.right = Some(Box::new(node));
+            self
+        }
+    }
+
+    let node1 = TreeNode::new(1)
+        .left(TreeNode::new(2))
+        .right(TreeNode::new(3));
+        
+
+}
+
 
 fn main() {
 
-    error_handling();
-    order_food();
+    concurrencys();
     
+    box_s();
+    // smart_pointer();
+    // closures();
+    // iterators();
+    // error_handling();
+    // order_food();
     // println!("sum is {}",addeven1(2,12));
     // println!("sum is {}",addeven2(2,12));
 
